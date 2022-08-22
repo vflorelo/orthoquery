@@ -26,29 +26,41 @@ The application is hosted in the wallerlab server and can be accessed by opening
 
 The application starts by asking the user their identity, this is required so that the annotations and comments can be properly referred.
 
-![user](images/01_user.png)
+<img src="images/01_user.png" height="500px"/>
 
 Right after the user provides their credentials, the datasets with which the Orthology analysis was run are loaded in the blue panel at the left-hand side of the page. The results currently hosted in the server were obtained by comparing the proteins of 99 datasets corresponding to 97 species.
 
-|Species|Species|Species|Species|Species|Species|Species|Species|Species|
-|-------|-------|-------|-------|-------|-------|-------|-------|------|
-|Acanthamoeba_castellani.NEFF|Alexandrium_catenella.nr95|Amoebophrya_sp|Amphidinium_carterae.nr95|Arabidopsis_thaliana.TAIR10|Aspergillus_niger|Aureococcus_anophagefferens|Babesia_bigemina.BOND|Babesia_bovis.T2Bo|
-|Babesia_microti|Batrachochytrium_dendrobatidis.JEL423|Besnoitia_besnoiti|Bigelowiella_natans|Bodo_saltans.Lake_Konstanz|Botryococcus_braunii.502|Caenorhabditis_elegans.WS283|Cardiosporidium_cionae|Chlamydomonas_reinhardtii.external|
-|Chlamydomonas_reinhardtii.GeneCatalog|Chromera_velia|Chrysochromulina_tobinii.CCMP291|Crassostrea_virginica|Crypthecodinium_cohnii.Libby_4|Cryptosporidium_andersoni.30847|Cryptosporidium_meleagridis.UKMEL1|Cryptosporidium_muris.RN66|Cryptosporidium_parvum|
-|Cyanidioschyzon_merolae.10D|Cyclospora_cayetanensis|Cytauxzoon_felis.Winnie|Danio_rerio|Dictyostelium_discoideum.AX4|Dinophysis_acuminata.nr95|Drosophila_melanogaster|Durinskia_baltica.nr95|Ectocarpus_siliculosus|
-|Eimeria_acervulina.Houghton|Eimeria_tenella|Entamoeba_histolytica.HM1IMSS|Galdieria_sulphuraria.074W|Gregarina_niphandrodes|Guillardia_theta.CCMP2712|Hammondia_hammondi.HH34|Hepatocystis|Heterocapsa_triquestra.nr95|
-|Homo_sapiens.GRCh38.ref|Ichthyophthirius_multifiliis|Karenia_brevis.nr95|Karlodinium_micrum.nr95|Kluyveromyces_lactis|Kryptoperidinium_foliaceum.nr95|Leishmania_major.Friedlin|Leishmania_mexicana.MHOMGT2001U1103|Lingulodinium_polyedra.nr95|
-|Monosiga_brevicollis.MX1|Mucor_circinelloides.1006PhL|Naegleria_fowleri.ATCC30863|Nannochloropsis_gaditana.CCMP526|Nematostella_vectensis|Neospora_caninum|Noctiluca_scintillans.nr95|Oryza_sativa.IRGSP|Oxyrrhis_marina.nr95|
-|Oxytricha_trifallax|Paramecium_tetraurelia|Perkinsus_atlanticus|Perkinsus_chesapeaki|Perkinsus_marinus|Phaeodactylum_tricornutum.CCAP_1055_1|Physcomitrella_patens|Phytophthora_infestans.T30-4|Plasmodiophora_brassicae.e3|
-|Plasmodium_berghei.ANKA|Plasmodium_falciparum|Plasmodium_vivax.P01|Polarella_glacialis|Protoceratium_reticulatum.nr95|Pseudocohnilembus_persalinus|Rhodotorula_toruloides.ATCC_204091|Saccharomyces_cerevisiae_S288C|Saprolegnia_parasitica|
-|Sarcocystis_neurona.SN3|Schizochytrium_aggregatum.nr95|Schizosaccharomyces_pombe|Stentor_coeruleus|Stylonychia_lemnae|Symbiodinium_microadriaticum_2.nr95|Symbiodinium_microadriaticum|Tetrahymena_thermophila|Thalassiosira_pseudonana|
-|Theileria_annulata.Ankara|Theileria_equi.WA|Theileria_orientalis.Shintoku|Theileria_parva|Togula_jolla.nr95|Toxoplasma_gondii|Trichomonas_vaginalis.G3|Trypanosoma_brucei.TREU927|Vitrella_brassicaformis|
+|Species|Species|Species|Species|
+|-------|-------|-------|-------|
+|Acanthamoeba_castellani.NEFF|Alexandrium_catenella.nr95|Amoebophrya_sp|Amphidinium_carterae.nr95|
+|Arabidopsis_thaliana.TAIR10|Aspergillus_niger|Aureococcus_anophagefferens|Babesia_bigemina.BOND|
+|Babesia_bovis.T2Bo|Babesia_microti|Batrachochytrium_dendrobatidis.JEL423|Besnoitia_besnoiti|
+|Bigelowiella_natans|Bodo_saltans.Lake_Konstanz|Botryococcus_braunii.502|Caenorhabditis_elegans.WS283|
+|Cardiosporidium_cionae|Chlamydomonas_reinhardtii.external|Chlamydomonas_reinhardtii.GeneCatalog|Chromera_velia|
+|Chrysochromulina_tobinii.CCMP291|Crassostrea_virginica|Crypthecodinium_cohnii.Libby_4|Cryptosporidium_andersoni.30847|
+|Cryptosporidium_meleagridis.UKMEL1|Cryptosporidium_muris.RN66|Cryptosporidium_parvum|Cyanidioschyzon_merolae.10D|
+|Cyclospora_cayetanensis|Cytauxzoon_felis.Winnie|Danio_rerio|Dictyostelium_discoideum.AX4|
+|Dinophysis_acuminata.nr95|Drosophila_melanogaster|Durinskia_baltica.nr95|Ectocarpus_siliculosus|
+|Eimeria_acervulina.Houghton|Eimeria_tenella|Entamoeba_histolytica.HM1IMSS|Galdieria_sulphuraria.074W|
+|Gregarina_niphandrodes|Guillardia_theta.CCMP2712|Hammondia_hammondi.HH34|Hepatocystis|
+|Heterocapsa_triquestra.nr95|Homo_sapiens.GRCh38.ref|Ichthyophthirius_multifiliis|Karenia_brevis.nr95|
+|Karlodinium_micrum.nr95|Kluyveromyces_lactis|Kryptoperidinium_foliaceum.nr95|Leishmania_major.Friedlin|
+|Leishmania_mexicana.MHOMGT2001U1103|Lingulodinium_polyedra.nr95|Monosiga_brevicollis.MX1|Mucor_circinelloides.1006PhL|
+|Naegleria_fowleri.ATCC30863|Nannochloropsis_gaditana.CCMP526|Nematostella_vectensis|Neospora_caninum|
+|Noctiluca_scintillans.nr95|Oryza_sativa.IRGSP|Oxyrrhis_marina.nr95|Oxytricha_trifallax|
+|Paramecium_tetraurelia|Perkinsus_atlanticus|Perkinsus_chesapeaki|Perkinsus_marinus|
+|Phaeodactylum_tricornutum.CCAP_1055_1|Physcomitrella_patens|Phytophthora_infestans.T30-4|Plasmodiophora_brassicae.e3|
+|Plasmodium_berghei.ANKA|Plasmodium_falciparum|Plasmodium_vivax.P01|Polarella_glacialis|
+|Protoceratium_reticulatum.nr95|Pseudocohnilembus_persalinus|Rhodotorula_toruloides.ATCC_204091|Saccharomyces_cerevisiae_S288C|
+|Saprolegnia_parasitica|Sarcocystis_neurona.SN3|Schizochytrium_aggregatum.nr95|Schizosaccharomyces_pombe|
+|Stentor_coeruleus|Stylonychia_lemnae|Symbiodinium_microadriaticum_2.nr95|Symbiodinium_microadriaticum|
+|Tetrahymena_thermophila|Thalassiosira_pseudonana|Theileria_annulata.Ankara|Theileria_equi.WA|
+|Theileria_orientalis.Shintoku|Theileria_parva|Togula_jolla.nr95|Toxoplasma_gondii|
+|Trichomonas_vaginalis.G3|Trypanosoma_brucei.TREU927|Vitrella_brassicaformis||
 
-Users can select a number of datasets based on the organisms that they want to compare, to avoid repetitive clicking, users can save their list of organisms as predefined presets and load them for future use. In the example below the selected preset automatically loads the data corresponding to 52 taxa from the Alveolate group
+Users can select a number of datasets based on the organisms that they want to compare, to avoid repetitive clicking, users can save their list of organisms as predefined presets and load them for future use. In the example below the selected preset automatically loads the data corresponding to 52 taxa from the Alveolate group. If the users want to start over, they can do so by clicking the red button.
 
-![preset](images/03_preset_load.png)
-
-If the users want to start over, they can click the right button.
+<img src="images/03_preset_load.png" height="500px">
 
 There can be orthogroups for which only certain species have representatives, the users can filter out these orthogroup by toggling the "Strict" switch on and off.
 
@@ -86,7 +98,7 @@ From the downloaded table, the user can manually explore the different orthogrou
 
 To obtain a fasta file with the sequences of all the proteins belonging to an orthogroup, the users first need to start the application, select their organisms an click on the green "OK" button, this will load the list of orthogroups shared among the selected organisms and such orthogroups will be shown in the middle panel labelled "Orthogroup list"
 
-![orthogroup_list](images/04_orthogroup_list.png)
+<img src="images/04_orthogroup_list.png" height="500px" />
 
 Depending on the number of selected datasets, the list of orthogroup can be very long, thus only 50 orthogroups are loaded, however the users can navigate with the arrows in the gray panel labelled "Navigation".
 
@@ -98,7 +110,7 @@ With the downloaded file, the user can now construct sequence alignments, phylog
 
 After loading a list of shared orthogroups (see test case 2), the users can obtain information about the proteins contained in such orthogroups. By clicking the gray button labelled "info" next to the OrthogroupID, the application will return a set of panels corresponding to the accession numbers present in each dataset
 
-![orthogroup_info](images/07_orthogroup_info.png)
+<img src="images/07_orthogroup_info.png" height="500px" />
 
 Each panel contains a list of accession numbers corresponding to the individual proteins belonging to the selected orthogroup. If the users click on the light-blue button labelled as "info", they can get additional information of the protein, such as 
 - Type
@@ -125,7 +137,7 @@ The structure of the file is the following:
 
 After clicking on the light-blue button labelled as "info", the users can add comments on a specific protein by clicking on the dark-gray button labelled as "+ add comment" located at the gray panel on the right hand side of the page. This will open a dialog in which the users can add specific information in a human readable format
 
-![comment](images/10_add_comment.png)
+<img src="images/10_add_comment.png" height="500px" />
 
 At the moment there are only two restrictions on how a comment should be structured:
 - The comment must not contain pipes "|"
@@ -135,7 +147,7 @@ It is advised that the user keep their comments short but informative because th
 
 After posting the comment the page automatically refreshes the info and the new comment is shown with the user name as well as the date in which the comment was added
 
-![comment_example](images/11_comments.png)
+<img src="images/11_comments.png" height="500px"/>
 
 ### Test case 3.3: I want to update the information of a protein
 
@@ -145,7 +157,7 @@ If after collecting evidence from different sources the user is confident about 
 
 After loading a list of shared orthogroups (see test case 2), the users can search for specific accession numbers. To do so, they simply need to type their query in the search box located in the yellow panel labelled as "Searcb by accession". If the users want to search for more than one accession number they can do so separating each accession number with commas. If the user types: `TGME49_228750,BBBOND_0206680,CmeUKMEL1_02560,random_gibberish`, the application will search orthogroups that contain the specified search terms and will return a list of orthogroups and the corresponding search term.
 
-![search](images/09_search_box.png)
+<img src="images/09_search_box.png" height="500px" />
 
 # Specifications
 
