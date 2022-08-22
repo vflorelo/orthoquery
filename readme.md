@@ -22,7 +22,7 @@ The following document serves as the user manual for OrthoQuery.
 
 # Access and general usage:
 
-The application is hosted in the wallerlab server and can be accessed by opening the following address: http://172.25.22.15/orthoquery
+The application is hosted in the wallerlab server and can be accessed by opening the following address: http://XXX.XXX.XXX.XXX/orthoquery
 
 The application starts by asking the user their identity, this is required so that the annotations and comments can be properly referred.
 
