@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type"    content="text/html; charset=UTF-8"            />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"                             />
+  <meta name="viewport"              content="width=device-width, initial-scale=1" />
+  <meta name="keywords"              content=""                                    />
+  <meta name="description"           content=""                                    />
+  <script src="js/jquery-3.6.0.min.js" ></script>
+  <script src="js/bootstrap.min.js"    ></script>
+  <link rel="stylesheet" href="css/bootstrap.min.css"   type="text/css" />
+  <link rel="stylesheet" href="css/bootstrap-icons.css" type="text/css" />
+  <title>.:OrthoQuery:. .:Waller Lab:.</title>
+  <style>
+    .overflowed_y {height:100%;overflow-y:scroll;}
+    .short_row    {height:400px;max-height:400px;}
+    .row-flex     {display:flex;flex-wrap: wrap;}
+  </style>
+</head>
+<body onload="resize_divs();get_current_date();clear_forms();show_user_dialog();">
+<div id="user_dialog"          name="user_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" >
+        <p>In order to use this application you need to provide your identity</p>
+        <p>Please choose a user name</p>
+        <select class="form-select" name="user_name" id="user_name" onchange="check_user_id()">
+          <option value="" selected></option>
+          <option value="bm561" >Brandon Mercado</option>
+          <option value="ds2000">Dayana Salas</option>
+          <option value="gb629" >Girish Beedessee</option>
+          <option value="jp958" >Jan Pyrih</option>
+          <option value="kb601" >Konstantin Barylyuk</option>
+          <option value="lk360" >Ludek Koreny</option>
+          <option value="qd226" >Qiongqiong Dai</option>
+          <option value="rfw26" >Ross Waller</option>
+          <option value="sc2247">Sara Chelaghma</option>
+          <option value="sc2203">Scott Chisholm</option>
+          <option value="tk556" >Thomas Krueger</option>
+          <option value="vf281" >Victor Flores</option>
+        </select>
+      </div>
+      <input type="hidden" name="cur_date" id="cur_date" />
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-6">
+            <div class="btn btn-success" name="user_ok" id="user_ok">OK</div>
+          </div>
+          <div class="col-6">
+            <div class="btn btn-danger" name="user_cancel" id="user_cancel" onclick="stop_application()">Cancel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="fasta_dialog"         name="fasta_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="fasta_dialog_message" id="fasta_dialog_message">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tsv_dialog"           name="tsv_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="tsv_dialog_message" id="tsv_dialog_message">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="info_dialog"          name="info_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="info_dialog_message" id="info_dialog_message">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="comment_dialog"       name="comment_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="comment_dialog_message" id="comment_dialog_message" ></div>
+      <div class="modal-footer" name="comment_dialog_footer" id="comment_dialog_footer" ></div>
+    </div>
+  </div>
+</div>
+<div id="preset_dialog"        name="preset_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="preset_dialog_message" id="preset_dialog_message" ></div>
+      <div class="modal-footer" name="preset_dialog_footer" id="preset_dialog_footer" ></div>
+    </div>
+  </div>
+</div>
+<div id="dataset_dialog"       name="dataset_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Attention</div>
+      <div class="modal-body" name="dataset_dialog_message" id="dataset_dialog_message" ></div>
+      <div class="modal-footer" name="dataset_dialog_footer" id="dataset_dialog_footer" ></div>
+    </div>
+  </div>
+</div>
+<div id="loading_dialog"       name="loading_dialog" class="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered text-center">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-center fs-3 text-bold text-white">Loading</div>
+      <div class="modal-body" name="comment_dialog_message" id="comment_dialog_message" >
+        <div class="spinner-grow text-primary" role="status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="preset_div"           name="preset_div" >
+  <div class="card">
+    <div class="card-header bg-warning text-dark text-bold text-center">Presets</div>
+    <div class="card-body">
+      <select name="preset_id" id="preset_id" class="form-control" onchange="check_preset_list()">
+        <option value=""></option>
+      </select>
+    </div>
+    <div class="card-footer">
+      <div class="btn btn-success disabled" name="preset_ok_button" id="preset_ok_button" onclick="load_preset()">
+        <span class="bi bi-list-check"> Load preset</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dataset_list_div"     name="dataset_list_div">
+  <div class="card overflowed_y">
+    <div class="card-header bg-primary text-white text-bold text-center">Dataset list</div>
+    <div class="card-body overflowed_y">
+      <div class="overflowed_y" name="dataset_list" id="dataset_list"></div>
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-4 p-1">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="ortho_mode" name="ortho_mode" />
+            <label class="form-check-label" for="ortho_mode">Strict</label>
+          </div>
+        </div>
+        <div class="col-4 p-1"><div class="btn btn-success disabled" id="confirm_datasets"  name="confirm_datasets"  onclick="toggle_spinner('start');setTimeout(get_orthogroup_list(1),1000)" ><span class="bi bi-check-circle"> OK</span></div></div>
+        <div class="col-4 p-1"><div class="btn btn-danger"           id="clear_datasets"    name="clear_datasets"    onclick="clear_datasets()"                                                ><span class="bi bi-arrow-clockwise"> Reset</span></div></div>
+        <div class="col-6 p-1"><div class="btn btn-info    disabled" id="download_datasets" name="download_datasets" onclick="toggle_spinner('start');setTimeout(download_datasets(),1000)"    ><span class="bi bi-table"> Download</span></div></div>
+        <div class="col-6 p-1"><div class="btn btn-warning disabled" id="save_preset"       name="save_preset"       onclick="toggle_spinner('start');setTimeout(show_preset_dialog(),1000)"   ><span class="bi bi-save"> Save preset</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="orthogroup_list_div"  name="orthogroup_list_div" >
+  <div class="card overflowed_y">
+    <div class="card-header bg-success text-white text-bold text-center">Orthogroup list</div>
+    <div name="ortho_find" id="ortho_find"></div>
+    <div name="ortho_nav" id="ortho_nav"></div>
+    <div class="card-body overflowed_y"><div class="overflowed_y" name="orthogroup_list" id="orthogroup_list"></div></div>
+  </div>
+</div>
+<div id="orthogroup_table_div" name="orthogroup_table_div" class="overflowed_y">
+  <div class="card">
+    <div class="card-header bg-info text-white text-bold text-center">Orthogroup content</div>
+    <div class="row overflowed_y" name="orthogroup_table" id="orthogroup_table"></div>
+  </div>
+</div>
+<div id="protein_info_div"     name="protein_info_div" >
+  <div class="card">
+    <div class="card-header bg-secondary text-white text-bold text-center">Protein info</div>
+    <div class="card-body" name="protein_info" id="protein_info"></div>
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+function resize_divs(){
+  var body_height = $(window).height() ;
+  var body_width  = $(window).width() ;
+  var height_80   = body_height - (body_height / 5);
+  var height_75   = body_height - (body_height / 4);
+  var height_66   = body_height - (body_height / 3);
+  var height_60   = body_height - ((body_height / 5)*2);
+  var height_55   = body_height - ((body_height/20)*9);
+  var height_50   = body_height / 2;
+  var height_45   = body_height - ((body_height/20)*11);
+  var height_40   = body_height - ((body_height / 5)*3);
+  var height_33   = body_height / 3;
+  var height_25   = body_height / 4;
+  var height_20   = body_height / 5;
+  var height_16   = height_33   / 2;
+  var height_8    = height_16   / 2;
+  var width_80    = body_width  - (body_width / 5);
+  var width_75    = body_width  - (body_width / 4);
+  var width_66    = body_width  - (body_width / 3);
+  var width_60    = body_width  - ((body_width / 5)*2);
+  var width_55    = body_width  - ((body_width/20)*9);
+  var width_50    = body_width  / 2 ;
+  var width_45    = body_width  - ((body_width/20)*11);
+  var width_40    = body_width  - ((body_width / 5)*3);
+  var width_33    = body_width  / 3 ;
+  var width_25    = body_width  / 4; 
+  var width_20    = body_width  / 5;
+  var width_16    = width_33    / 2;
+  var width_8     = width_16    / 2;
+  $("#preset_div").css({
+    "height"    : height_20,
+    "max-height": height_20,
+    "width"     : width_20,
+    "max-width" : width_20,
+    "position"  : "absolute",
+    "top"       : 0,
+    "left"      : 0});
+  $("#dataset_list_div").css({
+    "height"    : height_80,
+    "max-height": height_80,
+    "width"     : width_20,
+    "max-width" : width_20,
+    "position"  : "absolute",
+    "top"       : height_20,
+    "left"      : 0});
+  $("#orthogroup_list_div").css({
+    "height"    : body_height,
+    "max-height": body_height,
+    "width"     : width_20,
+    "max-width" : width_20,
+    "position"  : "absolute",
+    "top"       : 0,
+    "left"      : width_20});
+  $("#orthogroup_table_div").css({
+    "height"    : height_55,
+    "max-height": height_55,
+    "width"     : width_60,
+    "max-width" : width_60,
+    "position"  : "absolute",
+    "top"       : 0,
+    "left"      : width_40});
+  $("#protein_info_div").css({
+    "height"    : height_45,
+    "max-height": height_45,
+    "width"     : width_60,
+    "max-width" : width_60,
+    "position"  : "absolute",
+    "top"       : height_55,
+    "left"      : width_40});
+}
+function toggle_spinner(spinner_action){
+  if(spinner_action == "start"){
+    $("#loading_dialog").modal("show");
+    }
+  else if(spinner_action == "stop"){
+    $("#loading_dialog").modal("hide");
+    }
+  }
+function check_dataset_list(){
+  clear_divs();
+  var checked_arr = get_checked_arr();
+  if(checked_arr.length >0 ){
+    $("#confirm_datasets").removeClass("disabled");
+    $("#download_datasets").removeClass("disabled");
+    $("#save_preset").removeClass("disabled");
+    }
+  else if(checked_arr.length == 0 ){
+    $("#confirm_datasets").addClass("disabled");
+    $("#download_datasets").addClass("disabled");
+    $("#save_preset").addClass("disabled");
+    }
+  }
+function check_preset_list(){
+  var preset_id = $("#preset_select").val();
+  if (preset_id == ""){
+    $("#preset_ok_button").addClass("disabled");
+    }
+  else{
+    $("#preset_ok_button").removeClass("disabled");
+    }
+  }
+function check_user_id(){
+  var user_name = $("#user_name").val();
+  if(user_name == ""){
+    $("#user_ok").prop("disabled",true).attr("onclick","");
+    }
+  else{
+    $("#user_ok").prop("disabled",false).attr("onclick","toggle_spinner('start');close_user_dialog();setTimeout(function(){get_dataset_list();get_preset_list();},1000);");
+    }
+  }
+function clear_datasets(){
+  $(".dataset_list").each(function(){
+    $(this).prop("checked",false);
+    })
+  $("#confirm_datasets").addClass("disabled")
+  clear_divs();
+  }
+function clear_divs(){
+  $("#ortho_nav").html("");
+  $("#orthogroup_list").html("");
+  $("#orthogroup_table").html("");
+  $("#protein_info").html("");
+  }
+function clear_forms(){
+  $("#user_name").val("");
+  }
+function get_checked_arr(){
+  var checked_arr = [] ;
+  $(".dataset_list").each(function(){
+    if($(this).is(":checked")){
+      dataset_name = $(this).val();
+      checked_arr.push(dataset_name);
+      }
+    })
+  return checked_arr ;
+  }
+function get_current_date(){
+  const date = new Date();
+  var year_str = date.getFullYear();
+  var month_str = parseInt(date.getMonth()) + 1;
+  var day_str = date.getDate();
+  var date_str = year_str+"-"+month_str+"-"+day_str ;
+  $("#cur_date").val(date_str);
+  }
+function get_dataset_list(){
+  var form_data  = new FormData()       ;
+  var target_url = "get_dataset_list.php" ;
+  $.ajax({
+    url         : target_url,
+    dataType    : 'script',
+    cache       : false,
+    contentType : false,
+    processData : false,
+    data        : form_data,
+    type        : 'post',
+    complete    : function (datasets){
+                  var datasets_xml_data = datasets.responseText ;
+  								var xml_data          = $.parseXML(datasets_xml_data);
+  								$xml_data             = $(xml_data);
+                  var query_str         = $xml_data.find("query_str").text();
+                  var html_str          = "";
+                  var counter           = 0 ;
+                  if(query_str==0){
+                    html_str = "";
+                    $xml_data.find("entry").each(function (){
+                      counter          += 1;
+                      var dataset       = $(this).find("dataset").text();
+                      var protein_count = $(this).find("protein_count").text();
+                      html_str         += "  <input class=\"dataset_list btn-check\" id=\""+dataset+"\" type=\"checkbox\" value=\""+dataset+"\" onchange=\"check_dataset_list()\" />\n"+
+                                          "  <label class=\"btn btn-outline-primary text-start form-control \" for=\""+dataset+"\" >"+dataset+" <span class=\"badge bg-secondary rounded-pill\" >"+protein_count+"</span></label>\n";
+                      });
+                    $("#dataset_list").html(html_str);
+                    toggle_spinner("stop");
+                    }
+                  }
+    });
+  }
+function get_orthogroup_list(page_num){
+  var checked_arr = get_checked_arr();
+  var ortho_mode  = "" ;
+  if($("#ortho_mode").is(":checked")){
+    ortho_mode = "strict" ;
+    }
+  else{
+    ortho_mode = "relaxed";
+    }
+  var datasets   = checked_arr.toString();
+  var form_data  = new FormData()         ;
+  var target_url = "get_orthogroup_list.php"  ;
+  form_data.append("datasets", datasets)  ;
+  form_data.append("page_num", page_num)  ;
+  form_data.append("ortho_mode", ortho_mode)  ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (orthogroups){
+                var orthogroups_xml_data = orthogroups.responseText ;
+								var xml_data         = $.parseXML(orthogroups_xml_data);
+								$xml_data            = $(xml_data);
+                var query_str        = $xml_data.find("query_str").text();
+                if(query_str==0){
+                  var page_num  = parseInt($xml_data.find("page_num").text());
+                  var prev_page = page_num - 1 ;
+                  var next_page = page_num + 1 ; 
+                  var nav_html_str  = "";
+                  var find_html_str = "";
+                  find_html_str += "<div class=\"alert alert-warning row text-bold\">"+
+                                   "  <label for=\"search_box_div\">\n"+
+                                   "    <span class=\"badge rounded-pill bg-secondary\">Search by accession</span>\n"+
+                                   "  </label>\n"+
+                                   "  <div class=\"row m-2\" name=\"search_box_div\" id=\"search_box_div\">\n"+
+                                   "    <div class=\"col-10\">\n"+
+                                   "      <input class=\"form-control\" type=\"text\" name=\"search_box\" id=\"search_box\" oninput=\"sync_search(this.value)\" />\n"+
+                                   "    </div>\n"+
+                                   "    <div class=\"col-2\">\n"+
+                                   "      <button id=\"search_button\" class=\"btn btn-success form-control\" disabled onclick=\"toggle_spinner('start');search_by_accession(this.value,'1');\">\n"+
+                                   "        <span class=\"bi bi-search\"></span>\n"+
+                                   "      </button>\n"+
+                                   "    </div>\n"+
+                                   "  </div>\n"+
+                                   "</div>\n";
+                  nav_html_str = "<div class=\"alert alert-secondary text-bold text-center\">\n"+
+                                 "  <label for=\"nav_controls\">\n"+
+                                 "    <span class=\"badge rounded-pill bg-success bi bi-map\"> Navigation</span>\n"+
+                                 "  </label>\n"+
+                                 "  <div class=\"row m-2\" id=\"nav_controls\" name=\"nav_controls\">\n"+
+                                 "    <div class=\"col-2 offset-3\">\n"+
+                                 "      <span class=\"bi bi-caret-left badge rounded-pill bg-danger\" onclick=\"toggle_spinner('start'),setTimeout(get_orthogroup_list("+prev_page+"),1000)\">"+prev_page+"</span>\n"+
+                                 "    </div>\n"+
+                                 "    <div class=\"col-2\">\n"+
+                                 "      <span class=\"badge rounded-pill bg-secondary\" >"+page_num+"</span>\n"+
+                                 "    </div>\n"+
+                                 "    <div class=\"col-2\">\n"+
+                                 "      <span class=\"bi bi-caret-right badge rounded-pill bg-primary\" onclick=\"toggle_spinner('start'),setTimeout(get_orthogroup_list("+next_page+"),1000)\">"+next_page+"</span>\n"+
+                                 "    </div>\n"+
+                                 "  </div>\n"+
+                                 "</div>\n";
+                  var list_html_str = "<div class=\"list-group\">\n";
+                  $xml_data.find("entry").each(function (){
+                    var Orthogroup    = $(this).find("Orthogroup").text();
+                    var protein_count = $(this).find("protein_count").text();
+                    list_html_str    += "  <li class=\"list-group-item  orthogroup_item\" name=\""+Orthogroup+"\" id=\""+Orthogroup+"\" >"+Orthogroup+
+                                        "    <span class=\"badge bg-success rounded-pill\" onclick=\"toggle_spinner('start'),setTimeout(get_orthogroup_info('"+Orthogroup+"'),1000);highlight_orthogroup('"+Orthogroup+"')\" >"+
+                                        "      <span class=\"bi bi-search\"> info</span>\n"+
+                                        "    </span>\n"+
+                                        "    <span class=\"badge bg-secondary rounded-pill\" onclick=\"toggle_spinner('start');download_orthogroup_sequences('"+Orthogroup+"')\" >"+
+                                        "      <span class=\"bi bi-download\"> fasta</span>\n"+
+                                        "    </span>\n"+
+                                        "    <span class=\"badge bg-dark rounded-pill\" onclick=\"toggle_spinner('start');download_orthogroup_info('"+Orthogroup+"')\" >"+
+                                        "      <span class=\"bi bi-download\"> tsv</span>\n"+
+                                        "    </span>\n"+
+                                        "  </li>\n";
+                    });
+                  list_html_str += "</div>\n";
+                  $("#ortho_nav").html(nav_html_str);
+                  $("#ortho_find").html(find_html_str);
+                  $("#orthogroup_list").html(list_html_str);
+                  toggle_spinner('stop');
+                  }
+                }
+    })
+  }
+function get_orthogroup_info(orthogroup){
+  $("#orthogroup_table").html("");
+  var checked_arr = get_checked_arr();
+  var datasets   = checked_arr.toString();
+  var form_data  = new FormData()         ;
+  var target_url = "get_orthogroup_info.php";
+  form_data.append("orthogroup",orthogroup);
+  form_data.append("datasets", datasets)  ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (orthogroup_info){
+                var orthogroup_info_xml_data = orthogroup_info.responseText ;
+								var xml_data  = $.parseXML(orthogroup_info_xml_data);
+								$xml_data     = $(xml_data);
+                var query_str = $xml_data.find("query_str").text();
+                if(query_str==0){
+                  var num_species = parseInt($xml_data.find("num_species").text());
+                  var html_str = "";
+                  $xml_data.find("entry").each(function (){
+                    var species_name = $(this).find("species_name").text();
+                    html_str += "<div class=\"col-3\">\n"+
+                                "  <div class=\"card short_row\">\n"+
+                                "    <div class=\"card-header bg-dark text-bold text-center text-nowrap text-white\">\n"+species_name+"</div>\n"+
+                                "    <div class=\"card-body overflow-scroll\">\n"+
+                                "      <ul class=\"list-group\">\n";
+                    $(this).find("accession").each(function(){
+                      var accession = $(this).text();
+                      html_str += "        <li class=\"list-group-item protein_item \" accession=\""+accession+"\" >"+accession+
+                                  "          <span class=\"badge bg-info rounded-pill bi bi-search\" onclick=\"toggle_spinner('start');get_protein_info('"+accession+"','"+species_name+"');highlight_protein('"+accession+"')\"> info</span>\n"+
+                                  "        </li>\n";
+                      });
+                    html_str += "      </ul>\n"+
+                                "    </div>\n"+
+                                "  </div>\n"+
+                                "</div>\n";
+                    });
+                  $("#orthogroup_table").html(html_str);
+                  toggle_spinner('stop');
+                  }
+                }
+    })
+  }
+function get_preset_list(){
+  var form_data  = new FormData() ;
+  var target_url = "get_preset_list.php" ;
+  $.ajax({
+    url         : target_url,
+    dataType    : 'script',
+    cache       : false,
+    contentType : false,
+    processData : false,
+    data        : form_data,
+    type        : 'post',
+    complete    : function (presets){
+                  var presets_xml_data = presets.responseText ;
+  								var xml_data         = $.parseXML(presets_xml_data);
+  								$xml_data            = $(xml_data);
+                  var query_str        = $xml_data.find("query_str").text();
+                  var html_str         = "  <option value=\"\" selected></option>\n";
+                  if(query_str==0){
+                    $xml_data.find("entry").each(function (){
+                      var preset_name = $(this).find("preset_name").text();
+                      var preset_id   = $(this).find("preset_id").text();
+                      html_str  += "  <option value=\""+preset_id+"\" >"+preset_name+"</option>";
+                      });
+                    $("#preset_id").html(html_str);
+                    toggle_spinner("stop");
+                    }
+                  }
+    });
+  }
+function get_protein_info(accession,species_name){
+  $("#protein_info").html("")
+  var form_data  = new FormData()         ;
+  var target_url = "get_protein_info.php";
+  form_data.append("accession",accession);
+  form_data.append("species_name", species_name)  ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (protein_info){
+                var protein_info_xml_data = protein_info.responseText ;
+								var xml_data  = $.parseXML(protein_info_xml_data);
+								$xml_data     = $(xml_data);
+                var query_str = $xml_data.find("query_str").text();
+                if(query_str==0){
+                  var html_str ;
+                  var accession         = $xml_data.find("accession").text();
+                  var sequence          = $xml_data.find("sequence").text();
+                  var type              = $xml_data.find("type").text();
+                  switch(type){
+                    case "marker"    : empty_sel_str = ""         ; pred_sel_str = ""         ; marker_sel_str = "selected" ; break; 
+                    case "predicted" : empty_sel_str = ""         ; pred_sel_str = "selected" ; marker_sel_str = ""         ; break;
+                    default:
+                    case ""          : empty_sel_str = "selected" ; pred_sel_str = ""         ; marker_sel_str = ""         ; break;
+                  }
+                  var prot_function     = $xml_data.find("prot_function").text();
+                  var comments_str      = $xml_data.find("comments").text();
+                  var location          = $xml_data.find("location").text();
+                  var species_name      = $xml_data.find("species_name").text();
+                  var comments_html_str = "<div name=\"comments\" id=\"comments\">\n";
+                  if(comments_str != ""){
+                    var comments_arr      = comments_str.split("|");
+                    $.each(comments_arr,function(index,value){
+                      var comment_arr     = value.split(":");
+                      var comment_num     = comment_arr[0];
+                      var comment_user    = comment_arr[1];
+                      var comment_body    = comment_arr[2];
+                      var comment_date    = comment_arr[3];
+                      comments_html_str  += "  <div>\n"+
+                                            "    <label for=\"comment_"+comment_num+"\" class=\"form-label\">\n"+
+                                            "      <span class=\"badge bg-primary rounded-pill bi bi-person-fill\"> "+comment_user+"</span>\n"+
+                                            "      <span class=\"badge bg-success rounded-pill bi bi-calendar3\"> "+comment_date+"</span>\n"+
+                                            "      <span class=\"badge bg-danger  rounded-pill bi bi-x-circle-fill\" onclick=\"toggle_spinner('start');setTimeout(function(){remove_comment('"+species_name+"','"+accession+"','"+comment_num+"')},1000);\" > Remove</span>\n"+
+                                            "    </label>\n"+
+                                            "    <div name=\"comment_"+comment_num+"\" id=\"comment_"+comment_num+"\" class=\"alert alert-light\">"+comment_body+"</div>\n"+
+                                            "  </div>\n";
+                      })
+                    }
+                  comments_html_str   += "</div>\n";
+                  html_str = "<div class=\"row row-flex\">\n"+
+                             "  <div class=\"col-4\">\n"+
+                             "    <div class=\"row\">\n"+
+                             "      <div class=\"col-6 alert alert-primary \">\n"+
+                             "        <label class=\"form-label badge bg-primary rounded-pill bi bi-bookmark-heart\" for=\"accession\" > Accession</label>\n"+
+                             "        <input type=\"text\" name=\"accession\" id=\"accession\" class=\"form-control\" value=\""+accession+"\" disabled />\n"+
+                             "      </div>\n"+
+                             "      <div class=\"col-6 alert alert-warning \">\n"+
+                             "        <label class=\"form-label badge bg-warning rounded-pill bi bi-check2-circle\" for=\"type\" > Type</label>\n"+
+                             "        <select name=\"type\" id=\"type\" class=\"form-control\" onchange=\"toggle_spinner('start');setTimeout(function(){update_protein_info('"+species_name+"','"+accession+"','type')},1000)\">"+
+                             "          <option value=\"\"          "+empty_sel_str+"  ></option>\n"+
+                             "          <option value=\"predicted\" "+pred_sel_str+"   >Predicted</option>\n"+
+                             "          <option value=\"marker\"    "+marker_sel_str+" >Marker</option>\n"+
+                             "        </select>\n"+
+                             "      </div>\n"+
+                             "      <div class=\"col-12 alert alert-success \">\n"+
+                             "        <label class=\"form-label \" for=\"location\">\n"+
+                             "          <span class=\"badge bg-dark rounded-pill bi bi-geo-alt\" > Location</span>\n"+
+                             "          <span class=\"badge bg-success rounded-pill bi bi-check2-circle\" onclick=\"toggle_spinner('start');setTimeout(function(){update_protein_info('"+species_name+"','"+accession+"','location')},1000)\"> Update location</span>\n"+
+                             "        </label>\n"+
+                             "        <input type=\"text\" name=\"location\" id=\"location\" class=\"form-control\" value=\""+location+"\" />"+
+                             "      </div>\n"+
+                             "      <div class=\"col-12 alert alert-secondary\">\n"+
+                             "        <label class=\"form-label \" for=\"prot_function\">\n"+
+                             "          <span class=\"badge bg-dark rounded-pill bi bi-gear\" > Function</span>\n"+
+                             "          <span class=\"badge bg-success rounded-pill bi bi-check2-circle\" onclick=\"toggle_spinner('start');setTimeout(function(){update_protein_info('"+species_name+"','"+accession+"','prot_function')},1000)\"> Update function</span>\n"+
+                             "        </label>\n"+
+                             "        <input type=\"text\" name=\"prot_function\" id=\"prot_function\" class=\"form-control\" value=\""+prot_function+"\" />\n"+
+                             "      </div>\n"+
+                             "    </div>\n"+
+                             "  </div>\n"+
+                             "  <div class=\"col-4 alert alert-info\">"+
+                             "    <div>\n"+
+                             "      <span class=\"badge bg-info rounded-pill bi bi-chevron-right\" >"+accession+"</span>\n"+
+                             "      <span class=\"text-monospace\">"+sequence+"</span>\n"+
+                             "    </div>\n"+
+                             "  </div>\n"+
+                             "  <div class=\"col-4 alert alert-dark \">\n"+
+                             "    <label class=\"form-label\" >\n"+
+                             "      <span class=\"badge bg-light text-dark rounded-pill bi bi-chat\"> Comments</span>\n"+
+                             "      <span class=\"badge bg-secondary rounded-pill bi bi-plus-circle-fill\" onclick=\"show_comment_dialog('"+species_name+"','"+accession+"')\"> Add comment</span>\n"+
+                             "    </label>\n"+
+                             comments_html_str+
+                             "  </div>\n"+
+                             "</div>\n";
+                  setTimeout(function(){toggle_spinner('stop');},900);
+                  setTimeout(function(){$("#protein_info").html(html_str);},1000);
+                  }
+                }
+    })
+  }
+function highlight_orthogroup(orthogroup){
+  $(".orthogroup_item").each(function(){
+    $(this).removeClass("list-group-item-success");
+    });
+  $("#"+orthogroup).addClass("list-group-item-success");
+  }
+function highlight_protein(accession){
+  $(".protein_item").each(function(){
+    $(this).removeClass("list-group-item-info");
+    if($(this).attr("accession") == accession){
+      $(this).addClass("list-group-item-info");
+      }
+    });
+  }
+function download_datasets(){
+  var checked_arr = get_checked_arr();
+  var ortho_mode  = "" ;
+  if($("#ortho_mode").is(":checked")){
+    ortho_mode = "strict" ;
+    }
+  else{
+    ortho_mode = "relaxed";
+    }
+  var datasets   = checked_arr.toString()   ;
+  var form_data  = new FormData()           ;
+  var target_url = "download_datasets.php"  ;
+  form_data.append("datasets",   datasets)  ;
+  form_data.append("ortho_mode", ortho_mode);
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (datasets){
+                var datasets_xml_data = datasets.responseText ;
+								var xml_data  = $.parseXML(datasets_xml_data);
+								$xml_data     = $(xml_data);
+                var tsv_str = "";
+                var query_str = $xml_data.find("query_str").text();
+                var num_species = parseInt($xml_data.find("num_species").text());
+                var ortho_count = parseInt($xml_data.find("ortho_count").text());
+                if (query_str == 0){
+                  var client_file_name = ortho_count + "_orthogroups_"+ num_species + "_species.tsv";
+                  var server_file_name = $xml_data.find("file_name").text();
+                  var dialog_html_str = "<p>Your tsv file has been downloaded as \""+client_file_name+"\"</p>\n";
+                  var element = document.createElement('a');
+                  element.setAttribute("href",server_file_name);
+                  element.setAttribute("download",client_file_name);
+                  element.style.display  = 'none';
+                  document.body.appendChild(element);
+                  element.click();
+                  document.body.removeChild(element);
+                  toggle_spinner('stop');
+                  $("#dataset_dialog_message").html(dialog_html_str);
+                  $("#dataset_dialog").modal('show') ;
+                  setTimeout(function(){
+                    $("#dataset_dialog").modal("hide");
+                    $("#dataset_dialog_message").html("");
+                    },2500);
+                  }
+                }
+    });
+  }
+function download_orthogroup_sequences(orthogroup){
+  var checked_arr = get_checked_arr();
+  var ortho_mode  = "" ;
+  var datasets   = checked_arr.toString();
+  var form_data  = new FormData()         ;
+  var target_url = "download_orthogroup_sequences.php";
+  form_data.append("orthogroup",orthogroup);
+  form_data.append("datasets", datasets)  ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (orthogroup_sequences){
+                var orthogroup_sequences_xml_data = orthogroup_sequences.responseText ;
+                var fasta_str = "";
+								var xml_data  = $.parseXML(orthogroup_sequences_xml_data);
+								$xml_data     = $(xml_data);
+                var query_str = $xml_data.find("query_str").text();
+                var orthogroup  = $xml_data.find("orthogroup").text();
+                var num_species = parseInt($xml_data.find("num_species").text());
+                var file_name = orthogroup + "_" + num_species + "_species.fasta";
+                var counter_1 = 0;
+                var counter_2 = 0;
+                $xml_data.find("dataset").each(function(){
+                  if ( $(this).find("dataset_query_str").text() == 0){
+                    $(this).find("entry").each(function(){
+                      if($(this).find("sequence_query_str").text() == 0){
+                        var accession = $(this).find("accession").text();
+                        var sequence  = $(this).find("sequence").text();
+                        fasta_str += ">"+accession+"\n"+sequence+"\n";
+                        }
+                      else{
+                        counter_2 = parseInt(counter_2 + 1);
+                        }
+                      })
+                    }
+                  else{
+                    counter_1 = parseInt(counter_1 + 1);
+                    }
+                  })
+                if (counter_1 < num_species){
+                  var dialog_html_str = "<p>Your fasta file has been downloaded as \""+file_name+"\"</p>\n"+
+                                        "<p>"+counter_1+" datasets showed errors, verify your fasta file</p>\n"+
+                                        "<p>"+counter_2+" sequences showed errors, verify your fasta file</p>\n";
+                  //fasta_str = htmlDecode(fasta_str);
+                  var element = document.createElement('a');
+                  element.setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(fasta_str));
+                  element.setAttribute('download', file_name);
+                  element.style.display  = 'none';
+                  document.body.appendChild(element);
+                  element.click();
+                  document.body.removeChild(element);
+                  toggle_spinner('stop');
+                  $("#fasta_dialog_message").html(dialog_html_str);
+                  $("#fasta_dialog").modal('show') ;
+                  setTimeout(function(){
+                    $("#fasta_dialog").modal("hide");
+                    $("#fasta_dialog_message").html("");
+                    },2500);
+                  }
+                }
+    })
+  }
+function download_orthogroup_info(orthogroup){
+  var checked_arr = get_checked_arr();
+  var ortho_mode  = "" ;
+  var datasets   = checked_arr.toString();
+  var form_data  = new FormData()         ;
+  var target_url = "download_orthogroup_info.php";
+  form_data.append("orthogroup",orthogroup);
+  form_data.append("datasets", datasets)  ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (orthogroup_info){
+                var orthogroup_info_xml_data = orthogroup_info.responseText ;
+                var tsv_str     = "";
+								var xml_data    = $.parseXML(orthogroup_info_xml_data);
+								$xml_data       = $(xml_data);
+                var query_str   = $xml_data.find("query_str").text();
+                var orthogroup  = $xml_data.find("orthogroup").text();
+                var num_species = parseInt($xml_data.find("num_species").text());
+                var file_name   = orthogroup + "_" + num_species + "_species.tsv";
+                var counter_1   = 0;
+                var counter_2   = 0;
+                $xml_data.find("dataset").each(function(){
+                  if ( $(this).find("dataset_query_str").text() == 0){
+                    $(this).find("entry").each(function(){
+                      if($(this).find("info_query_str").text() == 0){
+                        var accession     = $(this).find("accession").text();
+                        var type          = $(this).find("type").text();
+                        var prot_function = $(this).find("prot_function").text();
+                        var comments      = $(this).find("comments").text();
+                        var location      = $(this).find("location").text();
+                        tsv_str += accession+"\t"+location+"\t"+type+"\t"+prot_function+"\t"+comments+"\n";
+                        }
+                      else{
+                        counter_2 = parseInt(counter_2 + 1);
+                        }
+                      })
+                    }
+                  else{
+                    counter_1 = parseInt(counter_1 + 1);
+                    }
+                  })
+                if (counter_1 < num_species){
+                  var dialog_html_str = "<p>Your tsv file has been downloaded as \""+file_name+"\"</p>\n"+
+                                        "<p>"+counter_1+" datasets showed errors, verify your tsv file</p>\n"+
+                                        "<p>"+counter_2+" sequences showed errors, verify your tsv file</p>\n";
+                  //fasta_str = htmlDecode(fasta_str);
+                  var element = document.createElement('a');
+                  element.setAttribute('href','data:text/plain;charset=utf-8,'+encodeURIComponent(tsv_str));
+                  element.setAttribute('download', file_name);
+                  element.style.display  = 'none';
+                  document.body.appendChild(element);
+                  element.click();
+                  document.body.removeChild(element);
+                  toggle_spinner('stop');
+                  $("#tsv_dialog_message").html(dialog_html_str);
+                  $("#tsv_dialog").modal('show') ;
+                  setTimeout(function(){
+                    $("#tsv_dialog").modal("hide");
+                    $("#tsv_dialog_message").html("");
+                    },2500);
+                  }
+                }
+    })
+}
+function update_protein_info(species_name,accession,field_name){
+  var field_value = $("#"+field_name).val();
+  var form_data  = new FormData();
+  var target_url = "update_protein_info.php";
+  form_data.append("species_name",species_name);
+  form_data.append("accession",   accession);
+  form_data.append("field_name",  field_name);
+  form_data.append("field_value", field_value);
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (protein_info){
+                var protein_info_xml_data = protein_info.responseText ;
+                var xml_data      = $.parseXML(protein_info_xml_data);
+                $xml_data         = $(xml_data);
+                var query_str     = $xml_data.find("query_str").text();
+                var species_name  = $xml_data.find("species_name").text();
+                var accession     = $xml_data.find("accession").text();
+                var field_name    = $xml_data.find("field_name").text();
+                var field_value   = $xml_data.find("field_value").text();
+                var info_html_str = "";
+                if (query_str == 0){
+                  info_html_str = "<p>Information successfully updated</p>"+
+                                  "<ul class=\"list-group\">\n"+
+                                  "  <li class=\"list-group-item\">Species name: "+species_name+"</li>\n"+
+                                  "  <li class=\"list-group-item\">Accession: "+accession+"</li>\n"+
+                                  "  <li class=\"list-group-item\">"+field_name+": "+field_value+"</li>\n"+
+                                  "</ul>\n";
+                  }
+                else{
+                  info_html_str = "<p>Unable to update protein information</p>"+
+                                  "<p>Please report this incident to vf281@cam.ac.uk</p>";
+                  }
+                $("#info_dialog_message").html(info_html_str);
+                $("#info_dialog").modal("show");
+                toggle_spinner('stop');
+                setTimeout(function(){
+                  $("#info_dialog").modal("hide");
+                  $("#info_dialog_message").html("");
+                  get_protein_info(accession,species_name);
+                  },2500);
+                }
+    })
+}
+function add_comment(species_name,accession){
+  var new_comment_str = $("#new_comment_str").val().replace(/(\r\n|\n|\r)/gm,"");
+  var user_name_str   = $("#user_name").val();
+  var cur_date_str    = $("#cur_date").val();
+  var form_data  = new FormData();
+  var target_url = "add_comment.php";
+  form_data.append("species_name",    species_name);
+  form_data.append("accession",       accession);
+  form_data.append("new_comment_str", new_comment_str);
+  form_data.append("user_name_str",   user_name_str);
+  form_data.append("cur_date_str",    cur_date_str);
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (add_comment){
+                var add_comment_xml_data = add_comment.responseText ;
+                var xml_data      = $.parseXML(add_comment_xml_data);
+                $xml_data         = $(xml_data);
+                var query_str     = $xml_data.find("query_str").text();
+                var species_name  = $xml_data.find("species_name").text();
+                var accession     = $xml_data.find("accession").text();
+                var old_comments  = $xml_data.find("old_comments").text();
+                var new_comments  = $xml_data.find("new_comments").text();
+                var info_html_str = "";
+                if (query_str == 0){
+                  info_html_str = "<p>Information successfully updated</p>"+
+                                  "<p>Old comments:</p>\n"+
+                                  "<p>"+old_comments+"</p>\n"+
+                                  "<p>New comments:</p>\n"+
+                                  "<p>"+new_comments+"</p>\n";
+                  }
+                else{
+                  info_html_str = "<p>Unable to update protein information</p>"+
+                                  "<p>Please report this incident to vf281@cam.ac.uk</p>";
+                  }
+                toggle_spinner('stop');
+                $("#comment_dialog").modal("hide");
+                $("#info_dialog_message").html(info_html_str);
+                $("#info_dialog").modal("show");
+                setTimeout(function(){
+                  $("#info_dialog").modal("hide");
+                  $("#info_dialog_message").html("");
+                  get_protein_info(accession,species_name);
+                  },2500);
+                }
+    })
+  }
+function remove_comment(species_name,accession,comment_num){
+  var form_data  = new FormData();
+  var target_url = "remove_comment.php";
+  form_data.append("species_name",species_name);
+  form_data.append("accession",   accession);
+  form_data.append("comment_num", comment_num);
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (remove_comment){
+                var remove_comment_xml_data = remove_comment.responseText ;
+								var xml_data      = $.parseXML(remove_comment_xml_data);
+								$xml_data         = $(xml_data);
+                var query_str     = $xml_data.find("query_str").text();
+                var species_name  = $xml_data.find("species_name").text();
+                var accession     = $xml_data.find("accession").text();
+                var old_comments  = $xml_data.find("old_comments").text();
+                var new_comments  = $xml_data.find("new_comments").text();
+                var info_html_str = "";
+                if (query_str == 0){
+                  info_html_str = "<p>Information successfully updated</p>"+
+                                  "<p>Old comments:</p>\n"+
+                                  "<p>"+old_comments+"</p>\n"+
+                                  "<p>New comments:</p>\n"+
+                                  "<p>"+new_comments+"</p>\n";
+                  }
+                else{
+                  info_html_str = "<p>Unable to update protein information</p>"+
+                                  "<p>Please report this incident to vf281@cam.ac.uk</p>";
+                  }
+                $("#info_dialog_message").html(info_html_str);
+                $("#info_dialog").modal("show");
+                toggle_spinner('stop');
+                setTimeout(function(){
+                  $("#info_dialog").modal("hide");
+                  $("#info_dialog_message").html("");
+                  get_protein_info(accession,species_name);
+                  },2500);
+                }
+    })
+}
+function show_comment_dialog(species_name,accession){
+  var msg_html_str = "" ;
+  var foot_html_str = "" ;
+  msg_html_str = "<div class=\"alert alert-light\">\n"+
+                 "  <div class=\"row\" >\n"+
+                 "    <div class=\"col-6\">\n"+
+                 "      <label class=\"form-label\" for=\"species_name_str\">\n"+
+                 "        <span class=\"badge rounded-pill bg-success bi bi-virus\"> Species name</span>\n"+
+                 "      </label>\n"+
+                 "      <input class=\"form-control\" type=\"text\" disabled name=\"species_name_str\" id=\"species_name_str\" value=\""+species_name+"\" />\n"+
+                 "    </div>\n"+
+                 "    <div class=\"col-6\">\n"+
+                 "      <label class=\"form-label\" for=\"accession_str\">\n"+
+                 "        <span class=\"badge rounded-pill bg-info bi bi-bookmark-heart\"> Accession</span>\n"+
+                 "      </label>\n"+
+                 "      <input class=\"form-control\" type=\"text\" disabled name=\"accession_str\" id=\"accession_str\" value=\""+accession+"\" />\n"+
+                 "    </div>\n"+
+                 "  </div>\n"+
+                 "  <label class=\"form-label\" for=\"new_comment\">\n"+
+                 "    <span class=\"badge rounded-pill bg-secondary bi bi-chat\"> your comment</span>\n"+
+                 "  </label>\n"+
+                 "  <textarea name=\"new_comment_str\" id=\"new_comment_str\" class=\"form-control\" ></textarea>\n"+
+                 "</div>\n";
+  foot_html_str = "<div class=\"btn btn-success bi bi-check2-circle\" onclick=\"toggle_spinner('start');setTimeout(function(){add_comment('"+species_name+"','"+accession+"')},1000);\"> save comment</div>\n"+
+                  "<div class=\"btn btn-danger bi bi-x\" onclick=\"close_comment_dialog()\"> cancel</div>\n";
+  $("#comment_dialog_message").html(msg_html_str);
+  $("#comment_dialog_footer").html(foot_html_str);
+  $("#comment_dialog").modal("show");
+  }
+function show_preset_dialog(){
+  var checked_arr = get_checked_arr();
+  var num_species = parseInt(checked_arr.length);
+  var msg_html_str = "" ;
+  var foot_html_str = "" ;
+  msg_html_str = "<div class=\"alert alert-light\">\n"+
+                 "  <p>Save your preset ("+num_species+" species) for future use</p>\n"+
+                 "  <label class=\"form-label\" for=\"preset_name\">\n"+
+                 "    <span class=\"badge rounded-pill bg-secondary bi bi-bookmark-check\"> your preset's name</span>\n"+
+                 "  </label>\n"+
+                 "  <input type=\"text\" name=\"preset_name\" id=\"preset_name\" class=\"form-control\" />\n"+
+                 "</div>\n";
+  foot_html_str = "<div class=\"btn btn-success bi bi-check2-circle\" onclick=\"toggle_spinner('start');setTimeout(function(){save_preset()},1000);\"> save preset</div>\n"+
+                  "<div class=\"btn btn-danger bi bi-x\" onclick=\"close_preset_dialog()\"> cancel</div>\n";
+  $("#preset_dialog_message").html(msg_html_str);
+  $("#preset_dialog_footer").html(foot_html_str);
+  toggle_spinner('stop');
+  $("#preset_dialog").modal("show");
+  }
+function show_user_dialog(){
+  $("#user_dialog").modal("show");
+  }
+function search_by_accession(accession_list,page_num){
+  accession_list = accession_list.trimEnd().replace(/ +/g,",");
+  var checked_arr = get_checked_arr();
+  var ortho_mode  = "" ;
+  if($("#ortho_mode").is(":checked")){
+    ortho_mode = "strict" ;
+  }
+  else{
+    ortho_mode = "relaxed";
+  }
+  var datasets   = checked_arr.toString()   ;
+  var form_data  = new FormData()           ;
+  var target_url = "search_by_accession.php";
+  form_data.append("datasets",      datasets)    ;
+  form_data.append("page_num",      page_num)    ;
+  form_data.append("ortho_mode",    ortho_mode);
+  form_data.append("accession_list",accession_list)   ;
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (orthogroups){
+                var orthogroups_xml_data = orthogroups.responseText ;
+								var xml_data         = $.parseXML(orthogroups_xml_data);
+								$xml_data            = $(xml_data);
+                var accession_list   = $xml_data.find("accession_list").text();
+                var accession_count  = $xml_data.find("accession_count").text();
+                var page_num         = parseInt($xml_data.find("page_num").text());
+                var prev_page        = page_num - 1 ;
+                var next_page        = page_num + 1 ; 
+                var nav_html_str  = "";
+                var find_html_str = "";
+                var list_html_str = "<div class=\"list-group\">\n";
+                var error_counter = 0 ;
+                find_html_str += "<div class=\"alert alert-warning text-bold\">"+
+                                  "  <label for=\"search_box_div\">\n"+
+                                  "    <span class=\"badge rounded-pill bg-secondary\">Search by accession</span>\n"+
+                                  "  </label>\n"+
+                                  "  <div class=\"row m-2\" name=\"search_box_div\" id=\"search_box_div\">\n"+
+                                  "    <div class=\"col-10\">\n"+
+                                  "      <input class=\"form-control\" type=\"text\" name=\"search_box\" id=\"search_box\" oninput=\"sync_search(this.value)\" />\n"+
+                                  "    </div>\n"+
+                                  "    <div class=\"col-2\">\n"+
+                                  "      <button id=\"search_button\" class=\"btn btn-success form-control\" disabled onclick=\"toggle_spinner('start');search_by_accession(this.value,'1');\">\n"+
+                                  "        <span class=\"bi bi-search\"></span>\n"+
+                                  "      </button>\n"+
+                                  "    </div>\n"+
+                                  "  </div>\n"+
+                                  "</div>\n";
+                nav_html_str += "<div class=\"alert alert-secondary text-bold text-center\">\n"+
+                                "  <label for=\"nav_controls\">\n"+
+                                "    <span class=\"badge rounded-pill bg-success bi bi-map\"> Navigation</span>\n"+
+                                "  </label>\n"+
+                                "  <div class=\"row m-2\" id=\"nav_controls\" name=\"nav_controls\">\n"+
+                                "    <div class=\"col-2 offset-3\">\n"+
+                                "      <span class=\"bi bi-caret-left badge rounded-pill bg-danger\" onclick=\"toggle_spinner('start'),setTimeout(search_by_accession('"+accession_list+"','"+prev_page+"'),1000)\">"+prev_page+"</span>\n"+
+                                "    </div>\n"+
+                                "    <div class=\"col-2\">\n"+
+                                "      <span class=\"badge rounded-pill bg-secondary\" >"+page_num+"</span>\n"+
+                                "    </div>\n"+
+                                "    <div class=\"col-2\">\n"+
+                                "      <span class=\"bi bi-caret-right badge rounded-pill bg-primary\" onclick=\"toggle_spinner('start'),setTimeout(search_by_accession('"+accession_list+"','"+next_page+"'),1000)\">"+next_page+"</span>\n"+
+                                "    </div>\n"+
+                                "  </div>\n"+
+                                "</div>\n";
+                $xml_data.find("entry").each(function(){
+                  var query_str     = $(this).find("query_str").text();
+                  var Orthogroup    = $(this).find("Orthogroup").text();
+                  var protein_count = $(this).find("protein_count").text();
+                  var accession     =  $(this).find("accession").text();
+                  if(query_str==0){
+                    list_html_str  += "  <li class=\"list-group-item  orthogroup_item\" name=\""+Orthogroup+"\" id=\""+Orthogroup+"\" >\n"+
+                                      "    <div>\n"+Orthogroup+
+                                      "      <span class=\"badge bg-success rounded-pill\" onclick=\"toggle_spinner('start'),setTimeout(get_orthogroup_info('"+Orthogroup+"'),1000);highlight_orthogroup('"+Orthogroup+"')\" >\n"+
+                                      "        <span class=\"bi bi-search\"> info</span>\n"+
+                                      "      </span>\n"+
+                                      "      <span class=\"badge bg-secondary rounded-pill\" onclick=\"toggle_spinner('start');download_orthogroup_sequences('"+Orthogroup+"')\" >\n"+
+                                      "        <span class=\"bi bi-download\"> fasta</span>\n"+
+                                      "      </span>\n"+
+                                      "      <span class=\"badge bg-dark rounded-pill\" onclick=\"toggle_spinner('start');download_orthogroup_info('"+Orthogroup+"')\" >\n"+
+                                      "        <span class=\"bi bi-download\"> tsv</span>\n"+
+                                      "      </span>\n"+
+                                      "    </div>\n"+
+                                      "    <div>\n"+
+                                      "      <span class=\"badge rounded-pill bg-info bi bi-pin-angle\"> "+accession+"</span>\n"+
+                                      "    </div>\n"+
+                                      "  </li>\n";
+                    }
+                  else{
+                    error_counter = parseInt(error_counter + 1 );
+                    list_html_str += "  <li class=\"list-group-item orthogroup_item\">\n"+
+                                     "    No hits for <span class=\"badge rounded-pill bg-secondary\"> "+accession+"</span>\n"+
+                                     "  </li>\n";
+                    }
+                  });
+                list_html_str += "</div>\n";
+                if (error_counter < accession_count){
+                  $("#ortho_nav").html(nav_html_str);
+                  $("#ortho_find").html(find_html_str);
+                  $("#orthogroup_list").html(list_html_str);
+                  }
+                toggle_spinner('stop');
+                }
+    })
+  }
+function sync_search(accession){
+  if(accession == ""){
+    $("#search_button").attr("disabled",true);
+    }
+  else{
+    $("#search_button").attr("disabled",false);
+    $("#search_button").val(accession);
+    }
+  }
+function close_comment_dialog(){
+  $("#comment_dialog").modal("hide");
+  $("#comment_dialog_message").html("");
+  $("#comment_dialog_footer").html("");
+  toggle_spinner('stop');
+  }
+function close_user_dialog(){
+  $("#user_dialog").modal("hide");
+  toggle_spinner('stop');
+  }
+function close_preset_dialog(){
+  $("#preset_dialog").modal("hide");
+  $("#preset_dialog_message").html("");
+  $("#preset_dialog_footer").html("");
+  toggle_spinner('stop');
+  }
+function load_preset(){
+  var preset_id = $("#preset_id").val();
+  var form_data  = new FormData() ;
+  form_data.append("preset_id",preset_id);
+  var target_url = "load_preset.php" ;
+  $.ajax({
+    url         : target_url,
+    dataType    : 'script',
+    cache       : false,
+    contentType : false,
+    processData : false,
+    data        : form_data,
+    type        : 'post',
+    complete    : function (load_preset){
+                  var load_preset_xml_data = load_preset.responseText ;
+  								var xml_data  = $.parseXML(load_preset_xml_data);
+  								$xml_data     = $(xml_data);
+                  var query_str = $xml_data.find("query_str").text();
+                  if(query_str==0){
+                    clear_datasets();
+                    $xml_data.find("dataset").each(function (){
+                      var dataset = $(this).text();
+                      document.getElementById(dataset).checked = true;
+                      });
+                    check_dataset_list();
+                    toggle_spinner("stop");
+                    }
+                  }
+    });
+}
+function save_preset(){
+  var checked_arr = get_checked_arr();
+  var datasets    = checked_arr.toString();
+  var preset_name = $("#preset_name").val();
+  var form_data   = new FormData();
+  var target_url  = "save_preset.php";
+  form_data.append("datasets",    datasets);
+  form_data.append("preset_name", preset_name);
+  $.ajax({
+    url: target_url,
+    dataType: 'script',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    complete: function (save_preset){
+                var save_preset_xml_data = save_preset.responseText ;
+                var xml_data      = $.parseXML(save_preset_xml_data);
+                $xml_data         = $(xml_data);
+                var query_str     = $xml_data.find("query_str").text();
+                if (query_str == 0){
+                  info_html_str = "<p>Preset successfully saved</p>";
+                  }
+                else{
+                  info_html_str = "<p>Unable to save preset</p>"+
+                                  "<p>Please report this incident to vf281@cam.ac.uk</p>";
+                  }
+                toggle_spinner('stop');
+                $("#preset_dialog").modal("hide");
+                $("#info_dialog_message").html(info_html_str);
+                $("#info_dialog").modal("show");
+                setTimeout(function(){
+                  $("#info_dialog").modal("hide");
+                  $("#info_dialog_message").html("");
+                  get_preset_list();
+                  },2500);
+                }
+    })
+  }
+</script>
+</html>
