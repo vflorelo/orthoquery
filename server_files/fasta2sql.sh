@@ -1,0 +1,20 @@
+#!/bin/bash
+fasta_file=$1
+base_name=$(echo "${fasta_file}" | perl -pe 's/\.faa//')
+echo "SET NAMES utf8;" >> "${base_name}.sql"
+echo "SET NAMES utf8mb4;" >> "${base_name}.sql"
+echo "DROP TABLE IF EXISTS \`${base_name}\`;" >> "${base_name}.sql"
+echo "CREATE TABLE \`${base_name}\` (" >> "${base_name}.sql"
+echo "  \`assoc\`         int(11) NOT     NULL AUTO_INCREMENT," >> "${base_name}.sql"
+echo "  \`accession\`     text    NOT     NULL," >> "${base_name}.sql"
+echo "  \`sequence\`      text    NOT     NULL," >> "${base_name}.sql"
+echo "  \`length\`        int(6)  NOT     NULL," >> "${base_name}.sql"
+echo "  \`type\`          text    DEFAULT NULL," >> "${base_name}.sql"
+echo "  \`prot_function\` text    DEFAULT NULL," >> "${base_name}.sql"
+echo "  \`domains\`       text    DEFAULT NULL," >> "${base_name}.sql"
+echo "  \`comments\`      text    DEFAULT NULL," >> "${base_name}.sql"
+echo "  \`location\`      text    DEFAULT NULL," >> "${base_name}.sql"
+echo "  PRIMARY KEY (\`assoc\`)" >> "${base_name}.sql"
+echo ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;" >> "${base_name}.sql"
+echo "INSERT INTO \`${base_name}\` (\`accession\`,\`sequence\`,\`length\`) VALUES " >> "${base_name}.sql"
+perl -pe 'if(/\>/){s/$/\t/};s/\n//;s/\>/\n/g' ${fasta_file} | tail -n+2 | sort -V --parallel=16	| uniq | awk 'BEGIN{FS="\t"}{print "(\""$1"\",\""$2"\","length($2)"),"}' >> "${base_name}.sql"
